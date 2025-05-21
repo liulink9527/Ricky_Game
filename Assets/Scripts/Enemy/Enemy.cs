@@ -49,13 +49,12 @@ public class Enemy : MonoBehaviour {
 
     protected virtual void Update() {
         faceDir = new Vector3(-transform.localScale.x, 1, 1);
-        Debug.Log(faceDir);
         currentState.LogicUpdate();
         TimeCounter();
     }
 
     protected virtual void FixedUpdate() {
-        if (!isHurt & !isDead) {
+        if (!isHurt & !isDead && !wait) {
             Move();
         }
         
