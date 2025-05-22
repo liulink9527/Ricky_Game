@@ -43,7 +43,6 @@ public class PhysicsCheck : MonoBehaviour {
     public void Check() {
         // 检测地面
         isGround = Physics2D.OverlapCircle((Vector2)transform.position + new Vector2(bottomOffset.x * transform.localScale.x, bottomOffset.y), checkRadius, groundLayer);
-        Debug.Log((Vector2)transform.position + new Vector2(bottomOffset.x * transform.localScale.x, bottomOffset.y));
         // 墙体判断
         touchLeftWall = Physics2D.OverlapCircle((Vector2)transform.position + new Vector2(leftOffset.x, leftOffset.y), checkRadius, groundLayer);
         touchRightWall = Physics2D.OverlapCircle((Vector2)transform.position + new Vector2(rightOffset.x, rightOffset.y), checkRadius, groundLayer);

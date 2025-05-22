@@ -12,6 +12,10 @@ public class BoarPatrolState : BaseState {
 
     public override void LogicUpdate() {
         // todo 发现player切换到Chase状态
+        if (currentEnemy.FoundPlayer()) {
+            currentEnemy.SwitchStatus(NPCState.Chase);
+        }
+        
         
         if (!currentEnemy.physicsCheck.isGround || (currentEnemy.physicsCheck.touchLeftWall && currentEnemy.faceDir.x < 0) || (currentEnemy.physicsCheck.touchRightWall && currentEnemy.faceDir.x > 0)) {
             currentEnemy.wait = true;
@@ -25,5 +29,6 @@ public class BoarPatrolState : BaseState {
     }
 
     public override void OnExit() {
+        currentEnemy.anim.SetBool("walk", false);
     }
 }

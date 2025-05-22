@@ -22,6 +22,13 @@ public class Enemy : MonoBehaviour {
     public bool isHurt;
     public bool isDead;
 
+    [Header("检测")] 
+    public Vector2 centerOffset;
+    public Vector2 checkSize;
+    public float checkDistance;
+    public LayerMask attackLayer;
+    
+
     
     private BaseState currentState;
     protected BaseState patrolState;
@@ -48,7 +55,7 @@ public class Enemy : MonoBehaviour {
     }
 
     protected virtual void Update() {
-        faceDir = new Vector3(-transform.localScale.x, 1, 1);
+        faceDir = new Vector3(-transform.localScale.x, 0, 0);
         currentState.LogicUpdate();
         TimeCounter();
     }
@@ -80,6 +87,26 @@ public class Enemy : MonoBehaviour {
             }
         }
     }
+
+    public bool FoundPlayer() {
+        return Physics2D.BoxCast(transform.position + (Vector3)centerOffset, checkSize, 0, faceDir, checkDistance, attackLayer);
+    }
+
+    public void SwitchStatus(NPCState state) {
+
+        var newState = state switch {
+            NPCState.Patrol => patrolState,
+            NPCState.Chase => chaseState,
+            _ => null
+        };
+        currentState.OnExit();
+        currentState = newState;
+        currentState.OnEnter(this);
+    }
+
+    #region 事件执行方法
+
+    
 
     public void OnTakeDamage(Transform attackTrans) {
         attacker = attackTrans;
@@ -116,6 +143,11 @@ public class Enemy : MonoBehaviour {
         Destroy(this.gameObject);
     }
 
+    #endregion
 
+    private void OnDrawGizmosSelected() {
+        // 绘制 BoxCast 的检测范围
+        Gizmos.DrawWireCube(transform.position + (Vector3)centerOffset + new Vector3(checkDistance * -transform.localScale.x, 0), checkSize);
 
+    }
 }
